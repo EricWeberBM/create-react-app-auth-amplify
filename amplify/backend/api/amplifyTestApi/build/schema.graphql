@@ -1,0 +1,217 @@
+type Partner {
+  id: ID!
+  name: String!
+  description: String
+  headOfficeLocationIn: validHeadOfficeLocation
+  isSupplier: Boolean!
+  infolineMail: String!
+  complaintMail: String!
+  websiteID: Int!
+  emailsReceivedFromProvider: [validEmailsReceivedFromProvider]
+  shouldPerformPriceCheck: Boolean
+  hasCustomLookUpPage: Boolean
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum validHeadOfficeLocation {
+  DE
+  EU
+  NONEU
+}
+
+enum validEmailsReceivedFromProvider {
+  Voucher
+  Confirmation
+  Cancellation
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelPartnerConnection {
+  items: [Partner]!
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelvalidHeadOfficeLocationInput {
+  eq: validHeadOfficeLocation
+  ne: validHeadOfficeLocation
+}
+
+input ModelvalidEmailsReceivedFromProviderListInput {
+  eq: [validEmailsReceivedFromProvider]
+  ne: [validEmailsReceivedFromProvider]
+  contains: validEmailsReceivedFromProvider
+  notContains: validEmailsReceivedFromProvider
+}
+
+input ModelPartnerFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  headOfficeLocationIn: ModelvalidHeadOfficeLocationInput
+  isSupplier: ModelBooleanInput
+  infolineMail: ModelStringInput
+  complaintMail: ModelStringInput
+  websiteID: ModelIntInput
+  emailsReceivedFromProvider: ModelvalidEmailsReceivedFromProviderListInput
+  shouldPerformPriceCheck: ModelBooleanInput
+  hasCustomLookUpPage: ModelBooleanInput
+  and: [ModelPartnerFilterInput]
+  or: [ModelPartnerFilterInput]
+  not: ModelPartnerFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Query {
+  getPartner(id: ID!): Partner
+  listPartners(filter: ModelPartnerFilterInput, limit: Int, nextToken: String): ModelPartnerConnection
+}
+
+input CreatePartnerInput {
+  id: ID
+  name: String!
+  description: String
+  headOfficeLocationIn: validHeadOfficeLocation
+  isSupplier: Boolean!
+  infolineMail: String!
+  complaintMail: String!
+  websiteID: Int!
+  emailsReceivedFromProvider: [validEmailsReceivedFromProvider]
+  shouldPerformPriceCheck: Boolean
+  hasCustomLookUpPage: Boolean
+}
+
+input UpdatePartnerInput {
+  id: ID!
+  name: String
+  description: String
+  headOfficeLocationIn: validHeadOfficeLocation
+  isSupplier: Boolean
+  infolineMail: String
+  complaintMail: String
+  websiteID: Int
+  emailsReceivedFromProvider: [validEmailsReceivedFromProvider]
+  shouldPerformPriceCheck: Boolean
+  hasCustomLookUpPage: Boolean
+}
+
+input DeletePartnerInput {
+  id: ID!
+}
+
+type Mutation {
+  createPartner(input: CreatePartnerInput!, condition: ModelPartnerConditionInput): Partner
+  updatePartner(input: UpdatePartnerInput!, condition: ModelPartnerConditionInput): Partner
+  deletePartner(input: DeletePartnerInput!, condition: ModelPartnerConditionInput): Partner
+}
+
+input ModelPartnerConditionInput {
+  name: ModelStringInput
+  description: ModelStringInput
+  headOfficeLocationIn: ModelvalidHeadOfficeLocationInput
+  isSupplier: ModelBooleanInput
+  infolineMail: ModelStringInput
+  complaintMail: ModelStringInput
+  websiteID: ModelIntInput
+  emailsReceivedFromProvider: ModelvalidEmailsReceivedFromProviderListInput
+  shouldPerformPriceCheck: ModelBooleanInput
+  hasCustomLookUpPage: ModelBooleanInput
+  and: [ModelPartnerConditionInput]
+  or: [ModelPartnerConditionInput]
+  not: ModelPartnerConditionInput
+}
+
+type Subscription {
+  onCreatePartner: Partner @aws_subscribe(mutations: ["createPartner"])
+  onUpdatePartner: Partner @aws_subscribe(mutations: ["updatePartner"])
+  onDeletePartner: Partner @aws_subscribe(mutations: ["deletePartner"])
+}

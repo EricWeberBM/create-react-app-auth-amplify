@@ -1,5 +1,8 @@
 .App {
-  text-align: center;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  background-color: aquamarine;
 }
 
 .App-logo {
@@ -7,9 +10,17 @@
   height: 40vmin;
 }
 
+.Partner-list-logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: auto;
+  width: 80%;
+}
+
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  width: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,6 +31,30 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.ProviderDetailView {
+  float:right;
+  width: 80%;
+}
+
+.PartnerList {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 20%;
+  height: 100vh;
+  border-right: solid 1px cornflowerblue;
+}
+
+.Provider-label {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background-color: #61dafb;
+  text-align: center;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  width: 80%;
 }
 
 @keyframes App-logo-spin {

@@ -1,0 +1,25 @@
+type Partner @model {
+  id: ID!
+  name: String!
+  description: String
+  headOfficeLocationIn: validHeadOfficeLocation
+  isSupplier: Boolean!
+  infolineMail: String!
+  complaintMail: String!
+  websiteID: Int!
+  emailsReceivedFromProvider: [validEmailsReceivedFromProvider]
+  shouldPerformPriceCheck: Boolean
+  hasCustomLookUpPage: Boolean
+}
+
+enum validHeadOfficeLocation {
+  DE
+  EU
+  NONEU
+} 
+
+enum validEmailsReceivedFromProvider {
+  Voucher
+  Confirmation
+  Cancellation
+}
