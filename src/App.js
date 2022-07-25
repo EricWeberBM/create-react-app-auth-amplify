@@ -1,50 +1,41 @@
 import React, { Component } from 'react';
-import logo from './logo-floyt.png';
 import './App.css';
-import Button from '@mui/material/Button';
+import { useDispatch, useSelector } from 'react-redux';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import aws_exports from './aws-exports';
 import { Amplify, API, graphqlOperation } from 'aws-amplify';
 import awsconfig from './aws-exports';
 import ResponsiveAppBar from './customComponents/ButtonAppBar';
-import FormDialog from './customComponents/FormDialog';
+import SupplierList from './features/supplier-list/SupplierList';
+import { getPartner, listPartners } from './graphql/queries';
+import ProviderDetailView from './features/partner-detail/PartnerDetail';
 
 Amplify.configure(awsconfig);
 Amplify.configure(aws_exports);
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = [];
+  }
+
+  // we pay per request so keep it disabled
+  componentDidMount() {
+    //const graphqlResult = API.graphql(graphqlOperation(listPartners)).then((response) => 
+    //{console.log(response);
+    // this.setState({listItems: response.data.listPartners.items})});
+
+    //test
+  };
+
   render(name) {
     return (
       <div>
         <ResponsiveAppBar >Test</ResponsiveAppBar>
         <div className="App">
-        <SupplierList />
-        <ProviderDetailView />
+        <SupplierList PartnerList={this.state.listItems}/>
+        <ProviderDetailView value="Hello World" />
         </div>
-      </div>
-         
-    );
-  }
-}
-
-function createNewProviderListEntry() {
-  FormDialog();
-}
-
-class SupplierList extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    console.log('render');
-    return (
-      <div className='PartnerList'>
-        <br/>
-        <img className="Partner-list-logo" src={logo}/>
-        <h2>Partner Repository (POC)</h2>
-        <Button variant="contained" onClick={createNewProviderListEntry}>Add new partner</Button>
-        <ListItem/>
       </div>
     );
   }
@@ -66,20 +57,6 @@ class ListItem extends Component {
           </p>
         ))}
       </React.Fragment>
-    );
-  }
-}
-
-class ProviderDetailView extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className='ProviderDetailView'>
-        <h1>This will be the detailview.</h1>
-      </div>
     );
   }
 }

@@ -2,7 +2,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  background-color: aquamarine;
+  background-color: lime;
 }
 
 .App-logo {
@@ -65,3 +65,47 @@
     transform: rotate(360deg);
   }
 }
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/materialicons/v135/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+input {
+  border: 1px solid blue;
+  display: inline-block;
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+  width: 2em;
+  line-height: inherit;
+  vertical-align: inherit;
+  text-align: right;
+  color: inherit;
+  font: inherit;
+  background: none;
+}
+
+input[disabled] {
+  border: 0;
+}
+
+a { cursor: pointer; text-decoration: none; }
