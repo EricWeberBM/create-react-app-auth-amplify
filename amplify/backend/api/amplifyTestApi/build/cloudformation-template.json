@@ -63,6 +63,10 @@
             "Description": "The id of an existing User Pool to connect. If this is changed, a user pool will not be created for you.",
             "Default": "NONE"
         },
+        "authRoleName": {
+            "Type": "String",
+            "Description": "Reference to the name of the Auth Role created for the project."
+        },
         "env": {
             "Type": "String",
             "Description": "The environment name. e.g. Dev, Test, or Production",
@@ -78,6 +82,72 @@
         }
     },
     "Resources": {
+        "DataStore": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": {
+                    "Fn::If": [
+                        "HasEnvironmentParameter",
+                        {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "AmplifyDataStore",
+                                    {
+                                        "Fn::GetAtt": [
+                                            "GraphQLAPI",
+                                            "ApiId"
+                                        ]
+                                    },
+                                    {
+                                        "Ref": "env"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "AmplifyDataStore",
+                                    {
+                                        "Fn::GetAtt": [
+                                            "GraphQLAPI",
+                                            "ApiId"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        }
+                    ]
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "ds_pk",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "ds_sk",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "ds_pk",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "ds_sk",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "BillingMode": "PAY_PER_REQUEST",
+                "TimeToLiveSpecification": {
+                    "AttributeName": "_ttl",
+                    "Enabled": true
+                }
+            }
+        },
         "GraphQLAPI": {
             "Type": "AWS::AppSync::GraphQLApi",
             "Properties": {
@@ -102,7 +172,12 @@
                         }
                     ]
                 },
-                "AuthenticationType": "API_KEY"
+                "AuthenticationType": "API_KEY",
+                "AdditionalAuthenticationProviders": [
+                    {
+                        "AuthenticationType": "AWS_IAM"
+                    }
+                ]
             }
         },
         "GraphQLAPIKey": {
@@ -114,18 +189,96 @@
                         "ApiId"
                     ]
                 },
-                "Description": "a key used for authorizing requests",
+                "Description": "api key description",
                 "Expires": {
                     "Fn::If": [
                         "APIKeyExpirationEpochIsPositive",
                         {
                             "Ref": "APIKeyExpirationEpoch"
                         },
-                        1690014383
+                        1664718820
                     ]
                 }
             },
             "Condition": "ShouldCreateAPIKey"
+        },
+        "NoneDataSource": {
+            "Type": "AWS::AppSync::DataSource",
+            "Properties": {
+                "ApiId": {
+                    "Fn::GetAtt": [
+                        "GraphQLAPI",
+                        "ApiId"
+                    ]
+                },
+                "Name": "NONE",
+                "Type": "NONE"
+            }
+        },
+        "AuthRolePolicy01": {
+            "Type": "AWS::IAM::ManagedPolicy",
+            "Properties": {
+                "Roles": [
+                    {
+                        "Ref": "authRoleName"
+                    }
+                ],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "appsync:GraphQL"
+                            ],
+                            "Resource": [
+                                {
+                                    "Fn::Sub": [
+                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/*",
+                                        {
+                                            "apiId": {
+                                                "Fn::GetAtt": [
+                                                    "GraphQLAPI",
+                                                    "ApiId"
+                                                ]
+                                            },
+                                            "typeName": "Details"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Fn::Sub": [
+                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/*",
+                                        {
+                                            "apiId": {
+                                                "Fn::GetAtt": [
+                                                    "GraphQLAPI",
+                                                    "ApiId"
+                                                ]
+                                            },
+                                            "typeName": "EmailsWeReceive"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Fn::Sub": [
+                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/*",
+                                        {
+                                            "apiId": {
+                                                "Fn::GetAtt": [
+                                                    "GraphQLAPI",
+                                                    "ApiId"
+                                                ]
+                                            },
+                                            "typeName": "Properties"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
         },
         "GraphQLSchema": {
             "Type": "AWS::AppSync::GraphQLSchema",
@@ -151,7 +304,7 @@
                 }
             }
         },
-        "Partner": {
+        "Provider": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
                 "Parameters": {
@@ -188,6 +341,9 @@
                     "AuthCognitoUserPoolId": {
                         "Ref": "AuthCognitoUserPoolId"
                     },
+                    "authRoleName": {
+                        "Ref": "authRoleName"
+                    },
                     "env": {
                         "Ref": "env"
                     },
@@ -216,13 +372,14 @@
                                 "Ref": "S3DeploymentRootKey"
                             },
                             "stacks",
-                            "Partner.json"
+                            "Provider.json"
                         ]
                     ]
                 }
             },
             "DependsOn": [
-                "GraphQLSchema"
+                "GraphQLSchema",
+                "NoneDataSource"
             ]
         },
         "CustomResourcesjson": {
@@ -268,7 +425,7 @@
             "DependsOn": [
                 "GraphQLAPI",
                 "GraphQLSchema",
-                "Partner"
+                "Provider"
             ]
         }
     },

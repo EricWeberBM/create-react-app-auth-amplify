@@ -1,58 +1,91 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreatePartner = /* GraphQL */ `
-  subscription OnCreatePartner {
-    onCreatePartner {
+export const onCreateProvider = /* GraphQL */ `
+  subscription OnCreateProvider {
+    onCreateProvider {
       id
-      name
-      description
-      headOfficeLocationIn
-      isSupplier
-      infolineMail
-      complaintMail
-      websiteID
-      emailsReceivedFromProvider
-      shouldPerformPriceCheck
-      hasCustomLookUpPage
+      Details {
+        Name
+        Description
+        HeadOfficeLocation
+        InfolineMail
+        ComplaintMail
+        Website
+      }
+      EmailsWeReceive {
+        Voucher
+        Cancellation
+        Confirmation
+      }
+      Properties {
+        IsSupplyingCars
+        ShouldPerformPriceCheck
+        HasCustomLookupPage
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdatePartner = /* GraphQL */ `
-  subscription OnUpdatePartner {
-    onUpdatePartner {
+export const onUpdateProvider = /* GraphQL */ `
+  subscription OnUpdateProvider {
+    onUpdateProvider {
       id
-      name
-      description
-      headOfficeLocationIn
-      isSupplier
-      infolineMail
-      complaintMail
-      websiteID
-      emailsReceivedFromProvider
-      shouldPerformPriceCheck
-      hasCustomLookUpPage
+      Details {
+        Name
+        Description
+        HeadOfficeLocation
+        InfolineMail
+        ComplaintMail
+        Website
+      }
+      EmailsWeReceive {
+        Voucher
+        Cancellation
+        Confirmation
+      }
+      Properties {
+        IsSupplyingCars
+        ShouldPerformPriceCheck
+        HasCustomLookupPage
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeletePartner = /* GraphQL */ `
-  subscription OnDeletePartner {
-    onDeletePartner {
+export const onDeleteProvider = /* GraphQL */ `
+  subscription OnDeleteProvider {
+    onDeleteProvider {
       id
-      name
-      description
-      headOfficeLocationIn
-      isSupplier
-      infolineMail
-      complaintMail
-      websiteID
-      emailsReceivedFromProvider
-      shouldPerformPriceCheck
-      hasCustomLookUpPage
+      Details {
+        Name
+        Description
+        HeadOfficeLocation
+        InfolineMail
+        ComplaintMail
+        Website
+      }
+      EmailsWeReceive {
+        Voucher
+        Cancellation
+        Confirmation
+      }
+      Properties {
+        IsSupplyingCars
+        ShouldPerformPriceCheck
+        HasCustomLookupPage
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }

@@ -1,67 +1,100 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createPartner = /* GraphQL */ `
-  mutation CreatePartner(
-    $input: CreatePartnerInput!
-    $condition: ModelPartnerConditionInput
+export const createProvider = /* GraphQL */ `
+  mutation CreateProvider(
+    $input: CreateProviderInput!
+    $condition: ModelProviderConditionInput
   ) {
-    createPartner(input: $input, condition: $condition) {
+    createProvider(input: $input, condition: $condition) {
       id
-      name
-      description
-      headOfficeLocationIn
-      isSupplier
-      infolineMail
-      complaintMail
-      websiteID
-      emailsReceivedFromProvider
-      shouldPerformPriceCheck
-      hasCustomLookUpPage
+      Details {
+        Name
+        Description
+        HeadOfficeLocation
+        InfolineMail
+        ComplaintMail
+        Website
+      }
+      EmailsWeReceive {
+        Voucher
+        Cancellation
+        Confirmation
+      }
+      Properties {
+        IsSupplyingCars
+        ShouldPerformPriceCheck
+        HasCustomLookupPage
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const updatePartner = /* GraphQL */ `
-  mutation UpdatePartner(
-    $input: UpdatePartnerInput!
-    $condition: ModelPartnerConditionInput
+export const updateProvider = /* GraphQL */ `
+  mutation UpdateProvider(
+    $input: UpdateProviderInput!
+    $condition: ModelProviderConditionInput
   ) {
-    updatePartner(input: $input, condition: $condition) {
+    updateProvider(input: $input, condition: $condition) {
       id
-      name
-      description
-      headOfficeLocationIn
-      isSupplier
-      infolineMail
-      complaintMail
-      websiteID
-      emailsReceivedFromProvider
-      shouldPerformPriceCheck
-      hasCustomLookUpPage
+      Details {
+        Name
+        Description
+        HeadOfficeLocation
+        InfolineMail
+        ComplaintMail
+        Website
+      }
+      EmailsWeReceive {
+        Voucher
+        Cancellation
+        Confirmation
+      }
+      Properties {
+        IsSupplyingCars
+        ShouldPerformPriceCheck
+        HasCustomLookupPage
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const deletePartner = /* GraphQL */ `
-  mutation DeletePartner(
-    $input: DeletePartnerInput!
-    $condition: ModelPartnerConditionInput
+export const deleteProvider = /* GraphQL */ `
+  mutation DeleteProvider(
+    $input: DeleteProviderInput!
+    $condition: ModelProviderConditionInput
   ) {
-    deletePartner(input: $input, condition: $condition) {
+    deleteProvider(input: $input, condition: $condition) {
       id
-      name
-      description
-      headOfficeLocationIn
-      isSupplier
-      infolineMail
-      complaintMail
-      websiteID
-      emailsReceivedFromProvider
-      shouldPerformPriceCheck
-      hasCustomLookUpPage
+      Details {
+        Name
+        Description
+        HeadOfficeLocation
+        InfolineMail
+        ComplaintMail
+        Website
+      }
+      EmailsWeReceive {
+        Voucher
+        Cancellation
+        Confirmation
+      }
+      Properties {
+        IsSupplyingCars
+        ShouldPerformPriceCheck
+        HasCustomLookupPage
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }

@@ -63,6 +63,10 @@
             "Description": "The id of an existing User Pool to connect. If this is changed, a user pool will not be created for you.",
             "Default": "NONE"
         },
+        "authRoleName": {
+            "Type": "String",
+            "Description": "Reference to the name of the Auth Role created for the project."
+        },
         "env": {
             "Type": "String",
             "Description": "The environment name. e.g. Dev, Test, or Production",
@@ -86,7 +90,7 @@
         }
     },
     "Resources": {
-        "PartnerTable": {
+        "ProviderTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
                 "TableName": {
@@ -96,7 +100,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "Partner",
+                                    "Provider",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
                                     },
@@ -110,7 +114,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "Partner",
+                                    "Provider",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
                                     }
@@ -178,11 +182,15 @@
                             "Ref": "AWS::NoValue"
                         }
                     ]
+                },
+                "TimeToLiveSpecification": {
+                    "AttributeName": "_ttl",
+                    "Enabled": true
                 }
             },
             "DeletionPolicy": "Delete"
         },
-        "PartnerIAMRole": {
+        "ProviderIAMRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "RoleName": {
@@ -192,7 +200,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "Partner95bd3f",
+                                    "Providerb0a3a8",
                                     "role",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
@@ -207,7 +215,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "Partner22f344",
+                                    "Provider57353a",
                                     "role",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
@@ -259,7 +267,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "Partner",
+                                                                        "Provider",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         },
@@ -273,7 +281,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "Partner",
+                                                                        "Provider",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         }
@@ -296,7 +304,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "Partner",
+                                                                        "Provider",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         },
@@ -310,7 +318,81 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "Partner",
+                                                                        "Provider",
+                                                                        {
+                                                                            "Ref": "GetAttGraphQLAPIApiId"
+                                                                        }
+                                                                    ]
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "Fn::Sub": [
+                                                "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}",
+                                                {
+                                                    "tablename": {
+                                                        "Fn::If": [
+                                                            "HasEnvironmentParameter",
+                                                            {
+                                                                "Fn::Join": [
+                                                                    "-",
+                                                                    [
+                                                                        "AmplifyDataStore",
+                                                                        {
+                                                                            "Ref": "GetAttGraphQLAPIApiId"
+                                                                        },
+                                                                        {
+                                                                            "Ref": "env"
+                                                                        }
+                                                                    ]
+                                                                ]
+                                                            },
+                                                            {
+                                                                "Fn::Join": [
+                                                                    "-",
+                                                                    [
+                                                                        "AmplifyDataStore",
+                                                                        {
+                                                                            "Ref": "GetAttGraphQLAPIApiId"
+                                                                        }
+                                                                    ]
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "Fn::Sub": [
+                                                "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}/*",
+                                                {
+                                                    "tablename": {
+                                                        "Fn::If": [
+                                                            "HasEnvironmentParameter",
+                                                            {
+                                                                "Fn::Join": [
+                                                                    "-",
+                                                                    [
+                                                                        "AmplifyDataStore",
+                                                                        {
+                                                                            "Ref": "GetAttGraphQLAPIApiId"
+                                                                        },
+                                                                        {
+                                                                            "Ref": "env"
+                                                                        }
+                                                                    ]
+                                                                ]
+                                                            },
+                                                            {
+                                                                "Fn::Join": [
+                                                                    "-",
+                                                                    [
+                                                                        "AmplifyDataStore",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         }
@@ -330,17 +412,17 @@
                 ]
             }
         },
-        "PartnerDataSource": {
+        "ProviderDataSource": {
             "Type": "AWS::AppSync::DataSource",
             "Properties": {
                 "ApiId": {
                     "Ref": "GetAttGraphQLAPIApiId"
                 },
-                "Name": "PartnerTable",
+                "Name": "ProviderTable",
                 "Type": "AMAZON_DYNAMODB",
                 "ServiceRoleArn": {
                     "Fn::GetAtt": [
-                        "PartnerIAMRole",
+                        "ProviderIAMRole",
                         "Arn"
                     ]
                 },
@@ -355,7 +437,7 @@
                                 "Fn::Join": [
                                     "-",
                                     [
-                                        "Partner",
+                                        "Provider",
                                         {
                                             "Ref": "GetAttGraphQLAPIApiId"
                                         },
@@ -369,7 +451,7 @@
                                 "Fn::Join": [
                                     "-",
                                     [
-                                        "Partner",
+                                        "Provider",
                                         {
                                             "Ref": "GetAttGraphQLAPIApiId"
                                         }
@@ -377,14 +459,49 @@
                                 ]
                             }
                         ]
-                    }
+                    },
+                    "DeltaSyncConfig": {
+                        "DeltaSyncTableName": {
+                            "Fn::If": [
+                                "HasEnvironmentParameter",
+                                {
+                                    "Fn::Join": [
+                                        "-",
+                                        [
+                                            "AmplifyDataStore",
+                                            {
+                                                "Ref": "GetAttGraphQLAPIApiId"
+                                            },
+                                            {
+                                                "Ref": "env"
+                                            }
+                                        ]
+                                    ]
+                                },
+                                {
+                                    "Fn::Join": [
+                                        "-",
+                                        [
+                                            "AmplifyDataStore",
+                                            {
+                                                "Ref": "GetAttGraphQLAPIApiId"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            ]
+                        },
+                        "DeltaSyncTableTTL": 30,
+                        "BaseTableTTL": 43200
+                    },
+                    "Versioned": true
                 }
             },
             "DependsOn": [
-                "PartnerIAMRole"
+                "ProviderIAMRole"
             ]
         },
-        "GetPartnerResolver": {
+        "SyncProviderResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -392,11 +509,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "PartnerDataSource",
+                        "ProviderDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "getPartner",
+                "FieldName": "syncProviders",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -413,7 +530,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "getPartner",
+                                        "syncProviders",
                                         "req",
                                         "vtl"
                                     ]
@@ -437,7 +554,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "getPartner",
+                                        "syncProviders",
                                         "res",
                                         "vtl"
                                     ]
@@ -448,7 +565,7 @@
                 }
             }
         },
-        "ListPartnerResolver": {
+        "GetProviderResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -456,11 +573,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "PartnerDataSource",
+                        "ProviderDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "listPartners",
+                "FieldName": "getProvider",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -477,7 +594,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "listPartners",
+                                        "getProvider",
                                         "req",
                                         "vtl"
                                     ]
@@ -501,7 +618,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "listPartners",
+                                        "getProvider",
                                         "res",
                                         "vtl"
                                     ]
@@ -512,7 +629,7 @@
                 }
             }
         },
-        "CreatePartnerResolver": {
+        "ListProviderResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -520,12 +637,80 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "PartnerDataSource",
+                        "ProviderDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "createPartner",
+                "FieldName": "listProviders",
+                "TypeName": "Query",
+                "RequestMappingTemplateS3Location": {
+                    "Fn::Sub": [
+                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
+                        {
+                            "S3DeploymentBucket": {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            "S3DeploymentRootKey": {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "ResolverFileName": {
+                                "Fn::Join": [
+                                    ".",
+                                    [
+                                        "Query",
+                                        "listProviders",
+                                        "req",
+                                        "vtl"
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "ResponseMappingTemplateS3Location": {
+                    "Fn::Sub": [
+                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
+                        {
+                            "S3DeploymentBucket": {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            "S3DeploymentRootKey": {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "ResolverFileName": {
+                                "Fn::Join": [
+                                    ".",
+                                    [
+                                        "Query",
+                                        "listProviders",
+                                        "res",
+                                        "vtl"
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "CreateProviderResolver": {
+            "Type": "AWS::AppSync::Resolver",
+            "Properties": {
+                "ApiId": {
+                    "Ref": "GetAttGraphQLAPIApiId"
+                },
+                "DataSourceName": {
+                    "Fn::GetAtt": [
+                        "ProviderDataSource",
+                        "Name"
+                    ]
+                },
+                "FieldName": "createProvider",
                 "TypeName": "Mutation",
+                "SyncConfig": {
+                    "ConflictDetection": "VERSION",
+                    "ConflictHandler": "AUTOMERGE"
+                },
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
                         "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
@@ -541,7 +726,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "createPartner",
+                                        "createProvider",
                                         "req",
                                         "vtl"
                                     ]
@@ -565,7 +750,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "createPartner",
+                                        "createProvider",
                                         "res",
                                         "vtl"
                                     ]
@@ -576,7 +761,7 @@
                 }
             }
         },
-        "UpdatePartnerResolver": {
+        "UpdateProviderResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -584,12 +769,16 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "PartnerDataSource",
+                        "ProviderDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "updatePartner",
+                "FieldName": "updateProvider",
                 "TypeName": "Mutation",
+                "SyncConfig": {
+                    "ConflictDetection": "VERSION",
+                    "ConflictHandler": "AUTOMERGE"
+                },
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
                         "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
@@ -605,7 +794,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "updatePartner",
+                                        "updateProvider",
                                         "req",
                                         "vtl"
                                     ]
@@ -629,7 +818,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "updatePartner",
+                                        "updateProvider",
                                         "res",
                                         "vtl"
                                     ]
@@ -640,7 +829,7 @@
                 }
             }
         },
-        "DeletePartnerResolver": {
+        "DeleteProviderResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -648,12 +837,16 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "PartnerDataSource",
+                        "ProviderDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "deletePartner",
+                "FieldName": "deleteProvider",
                 "TypeName": "Mutation",
+                "SyncConfig": {
+                    "ConflictDetection": "VERSION",
+                    "ConflictHandler": "AUTOMERGE"
+                },
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
                         "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
@@ -669,7 +862,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "deletePartner",
+                                        "deleteProvider",
                                         "req",
                                         "vtl"
                                     ]
@@ -693,7 +886,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "deletePartner",
+                                        "deleteProvider",
                                         "res",
                                         "vtl"
                                     ]
@@ -706,11 +899,11 @@
         }
     },
     "Outputs": {
-        "GetAttPartnerTableStreamArn": {
+        "GetAttProviderTableStreamArn": {
             "Description": "Your DynamoDB table StreamArn.",
             "Value": {
                 "Fn::GetAtt": [
-                    "PartnerTable",
+                    "ProviderTable",
                     "StreamArn"
                 ]
             },
@@ -723,18 +916,18 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "PartnerTable",
+                            "ProviderTable",
                             "StreamArn"
                         ]
                     ]
                 }
             }
         },
-        "GetAttPartnerDataSourceName": {
+        "GetAttProviderDataSourceName": {
             "Description": "Your model DataSource name.",
             "Value": {
                 "Fn::GetAtt": [
-                    "PartnerDataSource",
+                    "ProviderDataSource",
                     "Name"
                 ]
             },
@@ -747,17 +940,17 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "PartnerDataSource",
+                            "ProviderDataSource",
                             "Name"
                         ]
                     ]
                 }
             }
         },
-        "GetAttPartnerTableName": {
+        "GetAttProviderTableName": {
             "Description": "Your DynamoDB table name.",
             "Value": {
-                "Ref": "PartnerTable"
+                "Ref": "ProviderTable"
             },
             "Export": {
                 "Name": {
@@ -768,7 +961,7 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "PartnerTable",
+                            "ProviderTable",
                             "Name"
                         ]
                     ]

@@ -2,6 +2,7 @@
     "AppSyncApiName": "amplifyTestApi",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
     "DynamoDBEnableServerSideEncryption": false,
+    "AuthModeLastUpdated": "2022-07-22T08:33:02.741Z",
     "S3DeploymentBucket": "amplify-authcra-sampledev-112259-deployment",
-    "S3DeploymentRootKey": "amplify-appsync-files/48b86d44f4d11f6d4ad8d915a0d1df70d5a5d1f2"
+    "S3DeploymentRootKey": "amplify-appsync-files/d98b93b543ce382fa17c22ae56b5260814a3dbf9"
 }

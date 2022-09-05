@@ -1,17 +1,34 @@
-type Partner {
+type Provider @aws_iam @aws_api_key {
   id: ID!
-  name: String!
-  description: String
-  headOfficeLocationIn: validHeadOfficeLocation
-  isSupplier: Boolean!
-  infolineMail: String!
-  complaintMail: String!
-  websiteID: Int!
-  emailsReceivedFromProvider: [validEmailsReceivedFromProvider]
-  shouldPerformPriceCheck: Boolean
-  hasCustomLookUpPage: Boolean
+  Details: Details
+  EmailsWeReceive: EmailsWeReceive
+  Properties: Properties
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+}
+
+type Details @aws_api_key @aws_iam {
+  Name: String
+  Description: String
+  HeadOfficeLocation: validHeadOfficeLocation
+  InfolineMail: String
+  ComplaintMail: String
+  Website: String
+}
+
+type EmailsWeReceive @aws_api_key @aws_iam {
+  Voucher: Boolean
+  Cancellation: Boolean
+  Confirmation: Boolean
+}
+
+type Properties @aws_api_key @aws_iam {
+  IsSupplyingCars: Boolean
+  ShouldPerformPriceCheck: Boolean
+  HasCustomLookupPage: Boolean
 }
 
 enum validHeadOfficeLocation {
@@ -20,10 +37,25 @@ enum validHeadOfficeLocation {
   NONEU
 }
 
-enum validEmailsReceivedFromProvider {
-  Voucher
-  Confirmation
-  Cancellation
+input DetailsInput {
+  Name: String
+  Description: String
+  HeadOfficeLocation: validHeadOfficeLocation
+  InfolineMail: String
+  ComplaintMail: String
+  Website: String
+}
+
+input EmailsWeReceiveInput {
+  Voucher: Boolean
+  Cancellation: Boolean
+  Confirmation: Boolean
+}
+
+input PropertiesInput {
+  IsSupplyingCars: Boolean
+  ShouldPerformPriceCheck: Boolean
+  HasCustomLookupPage: Boolean
 }
 
 enum ModelSortDirection {
@@ -31,9 +63,10 @@ enum ModelSortDirection {
   DESC
 }
 
-type ModelPartnerConnection {
-  items: [Partner]!
+type ModelProviderConnection @aws_api_key @aws_iam {
+  items: [Provider]!
   nextToken: String
+  startedAt: AWSTimestamp
 }
 
 input ModelStringInput {
@@ -109,33 +142,11 @@ input ModelSizeInput {
   between: [Int]
 }
 
-input ModelvalidHeadOfficeLocationInput {
-  eq: validHeadOfficeLocation
-  ne: validHeadOfficeLocation
-}
-
-input ModelvalidEmailsReceivedFromProviderListInput {
-  eq: [validEmailsReceivedFromProvider]
-  ne: [validEmailsReceivedFromProvider]
-  contains: validEmailsReceivedFromProvider
-  notContains: validEmailsReceivedFromProvider
-}
-
-input ModelPartnerFilterInput {
+input ModelProviderFilterInput {
   id: ModelIDInput
-  name: ModelStringInput
-  description: ModelStringInput
-  headOfficeLocationIn: ModelvalidHeadOfficeLocationInput
-  isSupplier: ModelBooleanInput
-  infolineMail: ModelStringInput
-  complaintMail: ModelStringInput
-  websiteID: ModelIntInput
-  emailsReceivedFromProvider: ModelvalidEmailsReceivedFromProviderListInput
-  shouldPerformPriceCheck: ModelBooleanInput
-  hasCustomLookUpPage: ModelBooleanInput
-  and: [ModelPartnerFilterInput]
-  or: [ModelPartnerFilterInput]
-  not: ModelPartnerFilterInput
+  and: [ModelProviderFilterInput]
+  or: [ModelProviderFilterInput]
+  not: ModelProviderFilterInput
 }
 
 enum ModelAttributeTypes {
@@ -152,66 +163,46 @@ enum ModelAttributeTypes {
 }
 
 type Query {
-  getPartner(id: ID!): Partner
-  listPartners(filter: ModelPartnerFilterInput, limit: Int, nextToken: String): ModelPartnerConnection
+  getProvider(id: ID!): Provider @aws_api_key @aws_iam
+  listProviders(filter: ModelProviderFilterInput, limit: Int, nextToken: String): ModelProviderConnection @aws_api_key @aws_iam
+  syncProviders(filter: ModelProviderFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelProviderConnection @aws_api_key @aws_iam
 }
 
-input CreatePartnerInput {
+input CreateProviderInput {
   id: ID
-  name: String!
-  description: String
-  headOfficeLocationIn: validHeadOfficeLocation
-  isSupplier: Boolean!
-  infolineMail: String!
-  complaintMail: String!
-  websiteID: Int!
-  emailsReceivedFromProvider: [validEmailsReceivedFromProvider]
-  shouldPerformPriceCheck: Boolean
-  hasCustomLookUpPage: Boolean
+  Details: DetailsInput
+  EmailsWeReceive: EmailsWeReceiveInput
+  Properties: PropertiesInput
+  _version: Int
 }
 
-input UpdatePartnerInput {
+input UpdateProviderInput {
   id: ID!
-  name: String
-  description: String
-  headOfficeLocationIn: validHeadOfficeLocation
-  isSupplier: Boolean
-  infolineMail: String
-  complaintMail: String
-  websiteID: Int
-  emailsReceivedFromProvider: [validEmailsReceivedFromProvider]
-  shouldPerformPriceCheck: Boolean
-  hasCustomLookUpPage: Boolean
+  Details: DetailsInput
+  EmailsWeReceive: EmailsWeReceiveInput
+  Properties: PropertiesInput
+  _version: Int
 }
 
-input DeletePartnerInput {
+input DeleteProviderInput {
   id: ID!
+  _version: Int
 }
 
 type Mutation {
-  createPartner(input: CreatePartnerInput!, condition: ModelPartnerConditionInput): Partner
-  updatePartner(input: UpdatePartnerInput!, condition: ModelPartnerConditionInput): Partner
-  deletePartner(input: DeletePartnerInput!, condition: ModelPartnerConditionInput): Partner
+  createProvider(input: CreateProviderInput!, condition: ModelProviderConditionInput): Provider @aws_api_key @aws_iam
+  updateProvider(input: UpdateProviderInput!, condition: ModelProviderConditionInput): Provider @aws_api_key @aws_iam
+  deleteProvider(input: DeleteProviderInput!, condition: ModelProviderConditionInput): Provider @aws_api_key @aws_iam
 }
 
-input ModelPartnerConditionInput {
-  name: ModelStringInput
-  description: ModelStringInput
-  headOfficeLocationIn: ModelvalidHeadOfficeLocationInput
-  isSupplier: ModelBooleanInput
-  infolineMail: ModelStringInput
-  complaintMail: ModelStringInput
-  websiteID: ModelIntInput
-  emailsReceivedFromProvider: ModelvalidEmailsReceivedFromProviderListInput
-  shouldPerformPriceCheck: ModelBooleanInput
-  hasCustomLookUpPage: ModelBooleanInput
-  and: [ModelPartnerConditionInput]
-  or: [ModelPartnerConditionInput]
-  not: ModelPartnerConditionInput
+input ModelProviderConditionInput {
+  and: [ModelProviderConditionInput]
+  or: [ModelProviderConditionInput]
+  not: ModelProviderConditionInput
 }
 
 type Subscription {
-  onCreatePartner: Partner @aws_subscribe(mutations: ["createPartner"])
-  onUpdatePartner: Partner @aws_subscribe(mutations: ["updatePartner"])
-  onDeletePartner: Partner @aws_subscribe(mutations: ["deletePartner"])
+  onCreateProvider: Provider @aws_subscribe(mutations: ["createProvider"]) @aws_api_key @aws_iam
+  onUpdateProvider: Provider @aws_subscribe(mutations: ["updateProvider"]) @aws_api_key @aws_iam
+  onDeleteProvider: Provider @aws_subscribe(mutations: ["deleteProvider"]) @aws_api_key @aws_iam
 }

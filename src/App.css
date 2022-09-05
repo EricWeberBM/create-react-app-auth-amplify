@@ -1,8 +1,9 @@
 .App {
   overflow: hidden;
   display: flex;
+  height: 100vh;
   flex-direction: row;
-  background-color: lime;
+  background-color: whitesmoke;
 }
 
 .App-logo {
@@ -29,6 +30,11 @@
   color: white;
 }
 
+.LogoInput:hover {
+  transition: linear 1s;
+  filter:invert(1);
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -43,8 +49,8 @@
   align-items: center;
   flex-direction: column;
   width: 20%;
-  height: 100vh;
-  border-right: solid 1px cornflowerblue;
+  height: 100%;
+  border-right: solid 1px black;
 }
 
 .Provider-label {
@@ -55,6 +61,34 @@
   border-top: 1px solid black;
   border-bottom: 1px solid black;
   width: 80%;
+}
+
+.ProviderDetailDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  justify-content: space-between;
+  width: 100%;
+  background: whitesmoke;
+}
+
+.ProviderDetailControlDiv {
+  display: flex;
+  flex-direction: row;
+  width: 65%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.ProviderAttribute {
+  width: 65%;
+}
+
+.FormGroupBorder {
+  border: 1px solid #c4c4c4;
+  border-radius: 4px;
+  padding: 1em;
 }
 
 @keyframes App-logo-spin {

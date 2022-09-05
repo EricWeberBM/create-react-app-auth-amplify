@@ -5,7 +5,6 @@ import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import aws_exports from './aws-exports';
 import { Amplify, API, graphqlOperation } from 'aws-amplify';
 import awsconfig from './aws-exports';
-import ResponsiveAppBar from './customComponents/ButtonAppBar';
 import SupplierList from './features/supplier-list/SupplierList';
 import { getPartner, listPartners } from './graphql/queries';
 import ProviderDetailView from './features/partner-detail/PartnerDetail';
@@ -16,7 +15,7 @@ Amplify.configure(aws_exports);
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = [];
+    this.state = {};
   }
 
   // we pay per request so keep it disabled
@@ -31,10 +30,9 @@ class App extends Component {
   render(name) {
     return (
       <div>
-        <ResponsiveAppBar >Test</ResponsiveAppBar>
         <div className="App">
         <SupplierList PartnerList={this.state.listItems}/>
-        <ProviderDetailView value="Hello World" />
+        <ProviderDetailView/>
         </div>
       </div>
     );

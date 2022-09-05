@@ -1,48 +1,115 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getPartner = /* GraphQL */ `
-  query GetPartner($id: ID!) {
-    getPartner(id: $id) {
+export const getProvider = /* GraphQL */ `
+  query GetProvider($id: ID!) {
+    getProvider(id: $id) {
       id
-      name
-      description
-      headOfficeLocationIn
-      isSupplier
-      infolineMail
-      complaintMail
-      websiteID
-      emailsReceivedFromProvider
-      shouldPerformPriceCheck
-      hasCustomLookUpPage
+      Details {
+        Name
+        Description
+        HeadOfficeLocation
+        InfolineMail
+        ComplaintMail
+        Website
+      }
+      EmailsWeReceive {
+        Voucher
+        Cancellation
+        Confirmation
+      }
+      Properties {
+        IsSupplyingCars
+        ShouldPerformPriceCheck
+        HasCustomLookupPage
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const listPartners = /* GraphQL */ `
-  query ListPartners(
-    $filter: ModelPartnerFilterInput
+export const listProviders = /* GraphQL */ `
+  query ListProviders(
+    $filter: ModelProviderFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listPartners(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listProviders(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        name
-        description
-        headOfficeLocationIn
-        isSupplier
-        infolineMail
-        complaintMail
-        websiteID
-        emailsReceivedFromProvider
-        shouldPerformPriceCheck
-        hasCustomLookUpPage
+        Details {
+          Name
+          Description
+          HeadOfficeLocation
+          InfolineMail
+          ComplaintMail
+          Website
+        }
+        EmailsWeReceive {
+          Voucher
+          Cancellation
+          Confirmation
+        }
+        Properties {
+          IsSupplyingCars
+          ShouldPerformPriceCheck
+          HasCustomLookupPage
+        }
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
+      startedAt
+    }
+  }
+`;
+export const syncProviders = /* GraphQL */ `
+  query SyncProviders(
+    $filter: ModelProviderFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncProviders(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        Details {
+          Name
+          Description
+          HeadOfficeLocation
+          InfolineMail
+          ComplaintMail
+          Website
+        }
+        EmailsWeReceive {
+          Voucher
+          Cancellation
+          Confirmation
+        }
+        Properties {
+          IsSupplyingCars
+          ShouldPerformPriceCheck
+          HasCustomLookupPage
+        }
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
     }
   }
 `;

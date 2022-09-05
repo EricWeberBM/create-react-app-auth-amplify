@@ -1,9 +1,7 @@
 import { Component } from "react";
 import Button from '@mui/material/Button';
 import logo from '../../logo-floyt.png';
-import PartnerLabel from "../partner-label/PartnerLabel";
 import CreateProviderDialog from "../../customComponents/CreateProviderDialog";
-import { elementTypeAcceptingRef } from "@mui/utils";
 
 class SupplierList extends Component 
 {
@@ -13,8 +11,9 @@ class SupplierList extends Component
     this.state = {ModalVisible: false};
   }
 
+  // Todo show availabe providers in List
+
   render() {
-    console.log('render');
     return (
       <div className='PartnerList'>
         <br />
